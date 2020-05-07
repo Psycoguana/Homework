@@ -6,19 +6,17 @@ int i, j;
 #define row 8
 #define column 8
 
-int inflateMatrix(int matrix[][column], int arrayRow, int arrayColumn);
 int printMatrix(int matrix[][column], int arrayRow, int arrayColumn);
 int randNumbGenerator(int max_rand, int seed);
 
 int main(int argc, char const *argv[]) {
-  int matriz[row][column];
+  int matriz[row][column] = {0};
 
   int randNumb1 = randNumbGenerator(7, time(0));
   sleep(1);  // Sorry, no sé como crear diferentes seeds sin esperar 1 sec.
   int randNumb2 = randNumbGenerator(7, time(0));
 
   // Darle el valor de 0 a toda la matriz
-  inflateMatrix(matriz, row, column);
 
   // Cambiar dos posiciones aleatorias
   matriz[randNumb1][randNumb2] = 1;
@@ -35,14 +33,6 @@ int printMatrix(int matrix[][column], int arrayRow, int arrayColumn) {
   for (i = 0; i < arrayRow; i++) {
     for (j = 0; j < arrayColumn; j++) {
       printf("Posición de matriz: [%d][%d]\nValor: %d\n\n", i, j, matrix[i][j]);
-    }
-  }
-}
-
-int inflateMatrix(int matrix[][column], int arrayRow, int arrayColumn) {
-  for (i = 0; i < arrayRow; i++) {
-    for (j = 0; j < arrayColumn; j++) {
-      matrix[i][j] = 0;
     }
   }
 }
