@@ -1,0 +1,20 @@
+
+El "pequeño teorema de Fermat" dice que:
+Dados A un número natural y P un número primo, si se eleva A a la potencia P y al resultado se le resta A, lo obtenido es siempre divisible por P.
+Por ejemplo: 
+  8 ^ 3 = 512
+  512 - 8 = 504
+  se verifica que 504 es divisible por 3 (o sea, el teorema se cumple).
+
+
+
+Se pide:
+
+1) Realice la función POTENCIA, que recibe dos int conteniendo base y exponente, y retorna la potencia. 
+Su prototipo es:  int POTENCIA(int, int);
+
+2) Realice la función FERMAT, que recibe dos int y retorna 1 si se verifica el teorema para ese par de números (ver ejemplo) ó 0 en caso contrario.
+El prototipo es:  int FERMAT(int, int);
+
+3) Realice el main para probar el teorema con A={2...8} y P={3, 5, 7}.
+El programa debe informar si el teorema se cumple (o no) dentro de esos rangos con un único mensaje en pantalla.
