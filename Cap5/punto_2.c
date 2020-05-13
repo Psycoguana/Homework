@@ -4,7 +4,7 @@
 int i;
 
 int main(int argc, char const *argv[]) {
-  int array[20];
+  int array[5];
   int DIV;
 
   printf("Ingrese 20 enteros: \n\n");
@@ -18,8 +18,7 @@ int main(int argc, char const *argv[]) {
   printf("Ahora ingrese un divisor: ");
   scanf(" %d", &DIV);
 
-  // This is horrifying, como debería hacer esto sin que el index=1?
-  for (i = 1; i < sizeof(array) / sizeof(array[0]); i++) {
+  for (i = 0; i < sizeof(array) / sizeof(array[0]); i++) {
     if (array[i] % DIV == 0) {
       printf("%d es divisible por %d\n", array[i], DIV);
     }
