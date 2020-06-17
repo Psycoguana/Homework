@@ -75,6 +75,8 @@ int input_data(struct PlayerData data[]) {
     printf("Handicap: ");
     scanf("%d", &handicapTemp);
     data[i].handicap = handicapTemp;
+
+    clean_stdin(); // Necesito esto porque uso Linux
   }
   return 0;
 }
