@@ -33,7 +33,7 @@ struct Partners {
 };
 
 // Prototypes
-int input_data(struct PlayerData[]);
+int input_data(struct PlayerData data[]);
 int sort_players(struct PlayerData data[]);
 int assign_partner(struct PlayerData data[], struct Partners assigned_partners[]);
 int show_partners(struct Partners assigned_partners[]);
