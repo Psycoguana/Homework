@@ -9,8 +9,8 @@
 #include <string.h>
 
 bool getEnv(char[], char[]);
-bool isUpper(char *);
-char lower(char *);
+bool isLower(char *);
+char upper(char *);
 
 int main(int argc, char const *argv[], char const *envp[]) {
   int i;
@@ -19,7 +19,7 @@ int main(int argc, char const *argv[], char const *envp[]) {
   for (i = 0; *(envp + i); i++) {
     if (getEnv(*(envp + i), wantedEnv)) {
       printf("La variable %s se encuentra entre las variables de entorno, y su valor es:\n\n", wantedEnv);
-      printf("%s", *(envp + i));
+      printf("%s\n\n", *(envp + i));
     }
   }
 
@@ -29,36 +29,34 @@ int main(int argc, char const *argv[], char const *envp[]) {
 
 bool getEnv(char s1[], char s2[]) {
   int i = 0;
-  char currentEnv;
+  char envChar;
 
-  while (currentEnv != "=") {
-    currentEnv = *(s1 + i);
-    char wantedEnv = *(s2 + i);
+  while (envChar != "=") {
+    envChar = *(s1 + i);
+    char wantedChar = *(s2 + i);
 
-    if (!currentEnv || !wantedEnv) {
+    // Si se termino de iterar sobre el segundo string
+    // podemos decir que SI existe dentro del primer string.
+    if (!wantedChar) {
       return true;
     }
 
-    if (isUpper(&currentEnv)) {
-      currentEnv = (lower(&currentEnv));
+    if (isLower(&wantedChar)) {
+      wantedChar = (upper(&wantedChar));
     }
 
-    if (isUpper(&wantedEnv)) {
-      wantedEnv = (lower(&wantedEnv));
-    }
-
-    if (currentEnv != wantedEnv) {
+    if (envChar != wantedChar) {
       return false;
     }
     i++;
   }
 }
 
-char lower(char *ch) { return *ch + 32; }
+char upper(char *ch) { return *ch - 32; }
 
-bool isUpper(char *ch) {
-  // Si no es mayúscula...
-  if (*ch < 65 || *ch > 90) {
+bool isLower(char *ch) {
+  // Si no es minúscula...
+  if (*ch < 97 || *ch > 122) {
     return false;
   }
 }
