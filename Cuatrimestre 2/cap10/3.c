@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-          float cToF(float);
+float cToF(float);
 float fToK(float);
 float kToC(float);
 
@@ -43,7 +43,7 @@ int main(int argc, char const *argv[]) {
   }
 
   printf("Temperaturas convertidas desde °%c:\n\n", system);
-  printf("Celcius: %.2f\nFarenheitt: %.2f\nKelvin: %.2f", cTemp, fTemp, kTemp);
+  printf("Celcius: %.2f\fFarenheit: %.2f\nKelvin: %.2f", cTemp, fTemp, kTemp);
   printf("\n\n");
   return 0;
 }
