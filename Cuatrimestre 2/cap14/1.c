@@ -33,7 +33,7 @@ int main(int argc, char const *argv[]) {
 }
 
 int inflate(FILE *file) {
-  int i, fileSize = 20;
+  int i, fileSize = 2000;
 
   printf("Inflating file with...\n");
   for (i = 0; i < fileSize; i++) {
@@ -56,7 +56,7 @@ int randInsert(FILE *file, char *sequence, int sequenceSize) {
 
   printf("\n\nFile size: %u bytes. Rand position: %d\n", fileSize, randIndex);
   // Me muevo al index random.
-  fseek(file, 0, randIndex);
+  fseek(file, randIndex, SEEK_SET);
 
   printf("\nInserting sequence...\n");
   for (i = 0; i < sequenceSize; i++) {
