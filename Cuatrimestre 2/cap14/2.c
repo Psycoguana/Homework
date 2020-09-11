@@ -26,30 +26,26 @@ int main(int argc, char const *argv[]) {
 
 int find_sequence(FILE *file, char *sequence, int sequence_size) {
   unsigned char current_char;
-  unsigned char possible_sequence[sequence_size];
-
   unsigned char sequence_start = *(sequence);
-  // Por alguna razón, sequence_size == 15, a pesar de solo tiene 14 caractéres incluyendo a '\0'.
-  unsigned char sequence_end = *(sequence + sequence_size - 2);
+  unsigned char possible_sequence[sequence_size];
 
   fread(&current_char, sizeof(unsigned char), 1, file);
   while (!feof(file)) {
-
     if (current_char == sequence_start) {
-      fseek(file, sequence_size-3, SEEK_CUR);
-      fread(&current_char, sizeof(unsigned char), 1, file);
-      if (current_char == sequence_end) {
+      // Si el char actual es igual al primer char de la secuencia
+      // leo la secuencia entera.
+      fread(&possible_sequence, sequence_size, 1, file);
 
-        fseek(file, -sequence_size+1, SEEK_CUR);
-        fread(&possible_sequence, sequence_size, 1, file);
-        
-        if (strcmp(sequence, possible_sequence) == 0) {
-          printf("Se encontró la secuencia %s luego de leer %li bytes :)\n\n", possible_sequence, ftell(file));
-          // Cierro el archivo y termino el programa.
-          fclose(file);
-          exit(EXIT_SUCCESS);
-        }
+      if (strcmp(sequence, possible_sequence) == 0) {
+        printf("Se encontró la secuencia %s luego de leer %li bytes :)\n\n", possible_sequence, ftell(file));
+        // Cierro el archivo y termino el programa.
+        fclose(file);
+        exit(EXIT_SUCCESS);
+      } else {
+        // Oops, esa no era la secuencia. Vuelvo para atrás...
+        fseek(file, -sequence_size + sizeof(unsigned char), SEEK_CUR);
       }
+
     } else {
       fread(&current_char, sizeof(unsigned char), 1, file);
     }
