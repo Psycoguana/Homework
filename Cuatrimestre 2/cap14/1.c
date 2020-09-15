@@ -9,13 +9,10 @@
 
 int inflate(FILE *);
 int randInsert(FILE *, char*, int);
-int readFile(FILE *);
 
 int main(int argc, char const *argv[]) {
   char filePath[] = "1.txt";
-  // Si intento esto, pierdo el primer carácter de cada elemento.
-  // unsigned char sequence[] = {'A8', '5C', '69', '70', '70', 'AF', 'EF'};
-  unsigned char sequence[] = "A85C697070AFEF";
+  unsigned char sequence[] = {0xA8, 0x5C, 0x69, 0x70, 0x70, 0xAF, 0xEF};
 
   FILE *file = fopen(filePath, "w+b");
   if (!file) {
@@ -25,7 +22,6 @@ int main(int argc, char const *argv[]) {
 
   inflate(file);
   randInsert(file, sequence, sizeof(sequence));
-  readFile(file);
 
   fclose(file);
   printf("\n\n");
@@ -35,11 +31,9 @@ int main(int argc, char const *argv[]) {
 int inflate(FILE *file) {
   int i, fileSize = 2000;
 
-  printf("Inflating file with...\n");
+  printf("Inflating file...\n");
   for (i = 0; i < fileSize; i++) {
     unsigned char randHex = rand() % 255;
-    printf("%X ", randHex);
-
     fwrite(&randHex, sizeof(randHex), 1, file);
   }
 }
@@ -54,27 +48,12 @@ int randInsert(FILE *file, char *sequence, int sequenceSize) {
   srand(time(NULL));
   int randIndex = rand() % fileSize;
 
-  printf("\n\nFile size: %u bytes. Rand position: %d\n", fileSize, randIndex);
+  printf("\nFile size: %u bytes. Rand position: %d\n", fileSize, randIndex);
   // Me muevo al index random.
   fseek(file, randIndex, SEEK_SET);
 
   printf("\nInserting sequence...\n");
   for (i = 0; i < sequenceSize; i++) {
-    printf("Char: %c Hex: %x\n", *(sequence+i), *(sequence+i));
     fwrite((sequence+i), sizeof(unsigned char), 1, file);
-  }
-}
-
-int readFile(FILE *file) {
-  unsigned char curr;
-
-  fseek(file, 0, SEEK_SET);
-  printf("\n\nReading file...\n");
-
-
-  fread(&curr, sizeof(unsigned char), 1, file);
-  while (!feof(file)) {
-    printf("%c", curr);
-    fread(&curr, sizeof(unsigned char), 1, file);
   }
 }
