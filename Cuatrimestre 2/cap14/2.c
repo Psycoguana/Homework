@@ -41,7 +41,8 @@ int find_sequence(FILE *file, unsigned char *sequence, int sequence_size) {
 
       if (compareHex(sequence, possible_sequence, sequence_size)) {
         printf("Se encontró la secuencia luego de leer %li bytes :)\n\n", ftell(file));
-        // Cierro el archivo y termino el programa.
+        // Cierro el archivo, libero la memoria que ya no necesito y termino el programa.
+        free(possible_sequence);
         fclose(file);
         exit(EXIT_SUCCESS);
 
@@ -58,6 +59,9 @@ int find_sequence(FILE *file, unsigned char *sequence, int sequence_size) {
       fread(&current_char, 1, sizeof(unsigned char), file);
     }
   }
+  // Si no se encuentra una coincidencia en la línea 42, el free de la línea 45 nunca es llamado.
+  // Por eso también lo llamo acá.
+  free(possible_sequence);
 }
 
 bool compareHex(unsigned char *ch1, unsigned char *ch2, int size) {
