@@ -34,8 +34,8 @@ int find_sequence(FILE *file, unsigned char *sequence, int sequence_size) {
   fread(&current_char, sizeof(unsigned char), 1, file);
   while (!feof(file)) {
     if (current_char == sequence_start) {
-      // Si el char actual es igual al primer char de la secuencia
-      // leo la secuencia entera.
+      
+      // Si el char actual es igual al primer char de la secuencia leo la secuencia entera.
       fseek(file, -sizeof(unsigned char), SEEK_CUR);
       fread(possible_sequence, 1, sequence_size, file);
 
@@ -48,16 +48,20 @@ int find_sequence(FILE *file, unsigned char *sequence, int sequence_size) {
       } else {
         // Oops, esa no era la secuencia. Vuelvo para atrás...
         fseek(file, -sequence_size + 1, SEEK_CUR);
+        // Leo el siguiente byte para cambar el valor de current char
+        // y no volver a entrar en el if de la línea 36.
         fread(&current_char, 1, sizeof(unsigned char), file);
       }
 
     } else {
+      // Current char es distinto de sequence start, entonces leo el siguiente byte en current char.
       fread(&current_char, 1, sizeof(unsigned char), file);
     }
   }
 }
 
 bool compareHex(unsigned char *ch1, unsigned char *ch2, int size) {
+  // Compara byte a byte. Si en algún momento la secuencia no es igual, devuelve falso.
   int i;
   for (i = 0; i < size; i++) {
     if (*(ch1 + i) != *(ch2 + i)) {
