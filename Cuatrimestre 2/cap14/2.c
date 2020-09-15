@@ -3,14 +3,16 @@
 // imprimir en pantalla “Archivo infectado”, o “Virus no detectado” en caso contrario. Utilice el resultado
 // del ejercicio anterior.
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-int find_sequence(FILE *, char *, int);
+int find_sequence(FILE *, unsigned char *, int);
+bool compareHex(unsigned char *, unsigned char *, int);
 
 int main(int argc, char const *argv[]) {
-  unsigned char sequence[] = "A85C697070AFEF";
+  unsigned char sequence[] = {0xA8, 0x5C, 0x69, 0x70, 0x70, 0xAF, 0xEF};
 
   FILE *file = fopen("1.txt", "rb");
   if (!file) {
@@ -24,30 +26,42 @@ int main(int argc, char const *argv[]) {
   return 0;
 }
 
-int find_sequence(FILE *file, char *sequence, int sequence_size) {
+int find_sequence(FILE *file, unsigned char *sequence, int sequence_size) {
   unsigned char current_char;
-  unsigned char sequence_start = *(sequence);
-  unsigned char possible_sequence[sequence_size];
+  unsigned char sequence_start = *sequence;
+  unsigned char *possible_sequence = (unsigned char *) malloc(sequence_size);
 
   fread(&current_char, sizeof(unsigned char), 1, file);
   while (!feof(file)) {
     if (current_char == sequence_start) {
       // Si el char actual es igual al primer char de la secuencia
       // leo la secuencia entera.
-      fread(&possible_sequence, sequence_size, 1, file);
+      fseek(file, -sizeof(unsigned char), SEEK_CUR);
+      fread(possible_sequence, 1, sequence_size, file);
 
-      if (strcmp(sequence, possible_sequence) == 0) {
-        printf("Se encontró la secuencia %s luego de leer %li bytes :)\n\n", possible_sequence, ftell(file));
+      if (compareHex(sequence, possible_sequence, sequence_size)) {
+        printf("Se encontró la secuencia luego de leer %li bytes :)\n\n", ftell(file));
         // Cierro el archivo y termino el programa.
         fclose(file);
         exit(EXIT_SUCCESS);
+
       } else {
         // Oops, esa no era la secuencia. Vuelvo para atrás...
-        fseek(file, -sequence_size + sizeof(unsigned char), SEEK_CUR);
+        fseek(file, -sequence_size + 1, SEEK_CUR);
+        fread(&current_char, 1, sizeof(unsigned char), file);
       }
 
     } else {
-      fread(&current_char, sizeof(unsigned char), 1, file);
+      fread(&current_char, 1, sizeof(unsigned char), file);
+    }
+  }
+}
+
+bool compareHex(unsigned char *ch1, unsigned char *ch2, int size) {
+  int i;
+  for (i = 0; i < size; i++) {
+    if (*(ch1 + i) != *(ch2 + i)) {
+      return false;
     }
   }
 }
