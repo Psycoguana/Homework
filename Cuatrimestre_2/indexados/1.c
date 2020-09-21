@@ -4,8 +4,8 @@
 2.  MOSTRAR LOS ARTICULOS CUYO STOCK ES MENOR QUE 8 ✔️
 3.  DETERMINAR QUIEN ES EL PROVEEDOR QUE MAS ARTICULOS SUMINISTRA
 4.  PERMITIR EL INGRESO DE UN #ART Y BUSCARLO ✔️
-5.  INDEXAR EL ARCHIVO
-6.  ORDENAR EL INDICE
+5.  INDEXAR EL ARCHIVO ✔️
+6.  ORDENAR EL INDICE ✔️
 7.  REPETIR EL PUNTO 4 CON UNA BUSQUEDA BINARIA INDEXADA.
 
 */
@@ -13,6 +13,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+#define INDEX_NAME "index.dat"
 
 struct Article {
   short int article_number;
@@ -24,7 +26,7 @@ struct Article {
 
 struct Index {
   int id;
-  int article_number;
+  short int article_number;
 };
 
 int show_all(FILE *);
@@ -32,8 +34,10 @@ int show_max_stock(FILE *, int);
 int get_file_size(FILE *);
 int bigger_provider(FILE *);
 int find_article(FILE *);
+int print_article(struct Article *);
 int create_index(FILE *);
 int read_index(FILE *);
+int sort_index();
 
 int main(int argc, char const *argv[]) {
 
@@ -47,18 +51,56 @@ int main(int argc, char const *argv[]) {
   /* show_max_stock(file, 8); */
   /* bigger_provider(file); */
   /* find_article(file); */
-  create_index(file);
+  /* create_index(file); */
+  sort_index();
+  read_index(fopen(INDEX_NAME, "rb"));
 
   printf("\n\n");
   return 0;
 }
 
+int sort_index() {
+  int i, j;
+  struct Index index;
+
+  FILE *file_r = fopen(INDEX_NAME, "r+b");
+  if (!file_r) {
+    printf("Error al abrir índice para ordenamiento...\n\n");
+    exit(EXIT_FAILURE);
+  }
+
+  int entries_size = get_file_size(file_r) / sizeof(struct Index);
+  struct Index *index_array = (struct Index *)malloc(entries_size * sizeof(struct Index));
+
+  for (i = 0; i < entries_size; i++) {
+    fread(&index, sizeof(struct Index), 1, file_r);
+    *(index_array + i) = index;
+  }
+
+  for (i = 0; i < entries_size - 1; i++) {
+    for (j = 0; j < entries_size - i - 1; j++) {
+      if (index_array[j].article_number > index_array[j + 1].article_number) {
+        struct Index aux = index_array[j];
+        index_array[j] = index_array[j + 1];
+        index_array[j + 1] = aux;
+      }
+    }
+  }
+
+  fseek(file_r, 0, SEEK_SET);
+  for (i = 0; i < entries_size; i++) {
+    fwrite(&index_array[i], sizeof(index_array[i]), 1, file_r);
+  }
+  free(index_array);
+  fclose(file_r);
+}
+
 int create_index(FILE *articles_file) {
   /* Yo lo voy a hacer con structs, la verdad no sé si es lo mejor, pero no veo porque no. */
-  int i;
+  int counter = 0;
   struct Index index;
   struct Article article;
-  FILE *index_file = fopen("index.dat", "wb");
+  FILE *index_file = fopen(INDEX_NAME, "wb");
 
   if (!index_file) {
     printf("Error al crear el índice D':\n\n");
@@ -68,18 +110,18 @@ int create_index(FILE *articles_file) {
   fread(&article, sizeof(article), 1, articles_file);
   while (!feof(articles_file)) {
 
-    index.id = i;
+    index.id = counter;
     index.article_number = article.article_number;
-    int a = fwrite(&index, sizeof(index), 1, index_file);
+    fwrite(&index, sizeof(index), 1, index_file);
 
-    int b = fread(&article, sizeof(article), 1, articles_file);
-    i++;
+    fread(&article, sizeof(article), 1, articles_file);
+    counter++;
   }
 
   fseek(articles_file, 0, SEEK_SET);
-  fseek(index_file, 0, SEEK_SET);
+  fclose(index_file);
 
-  read_index(index_file);
+  printf("Index creado :)");
 }
 
 int read_index(FILE *index_file) {
@@ -88,7 +130,7 @@ int read_index(FILE *index_file) {
   fread(&index, sizeof(index), 1, index_file);
   while (!feof(index_file)) {
     printf("ID: %d\n", index.id);
-    printf("Article_number: %d\n\n", index.article_number);
+    printf("Article_number: %hd\n\n", index.article_number);
 
     fread(&index, sizeof(index), 1, index_file);
   }
@@ -101,7 +143,7 @@ int find_article(FILE *file) {
   short int article_number;
 
   printf("Ingrese el número de articulo que deseas buscar: ");
-  scanf("%d", &article_number);
+  scanf("%hd", &article_number);
 
   fread(&article, sizeof(article), 1, file);
   while (!feof(file)) {
