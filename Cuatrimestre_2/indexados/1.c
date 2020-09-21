@@ -51,7 +51,7 @@ int main(int argc, char const *argv[]) {
   /* show_max_stock(file, 8); */
   /* bigger_provider(file); */
   /* find_article(file); */
-  /* create_index(file); */
+  create_index(file);
   sort_index();
   read_index(fopen(INDEX_NAME, "rb"));
 
@@ -61,7 +61,7 @@ int main(int argc, char const *argv[]) {
 
 int sort_index() {
   int i, j;
-  struct Index index;
+  struct Index first, second, aux;
 
   FILE *file_r = fopen(INDEX_NAME, "r+b");
   if (!file_r) {
@@ -70,29 +70,27 @@ int sort_index() {
   }
 
   int entries_size = get_file_size(file_r) / sizeof(struct Index);
-  struct Index *index_array = (struct Index *)malloc(entries_size * sizeof(struct Index));
-
-  for (i = 0; i < entries_size; i++) {
-    fread(&index, sizeof(struct Index), 1, file_r);
-    *(index_array + i) = index;
-  }
 
   for (i = 0; i < entries_size - 1; i++) {
     for (j = 0; j < entries_size - i - 1; j++) {
-      if (index_array[j].article_number > index_array[j + 1].article_number) {
-        struct Index aux = index_array[j];
-        index_array[j] = index_array[j + 1];
-        index_array[j + 1] = aux;
-      }
-    }
-  }
+      fread(&first, sizeof(first), 1, file_r);
+      fread(&second, sizeof(second), 1, file_r);
 
-  fseek(file_r, 0, SEEK_SET);
-  for (i = 0; i < entries_size; i++) {
-    fwrite(&index_array[i], sizeof(index_array[i]), 1, file_r);
+      if (first.article_number > second.article_number) {
+        aux = first;
+        first = second;
+        second = aux;
+
+        fseek(file_r, -2 * sizeof(first), SEEK_CUR);
+        fwrite(&first, sizeof(first), 1, file_r);
+        fwrite(&second, sizeof(second), 1, file_r);
+      }
+      fseek(file_r, -sizeof(first), SEEK_CUR);
+    }
+    /* Si no uso rewind, al ejecutar for i por segunda vez, lee desde ~ el final del archivo, con flags de EOF.
+    Todo un lío */
+    rewind(file_r);
   }
-  free(index_array);
-  fclose(file_r);
 }
 
 int create_index(FILE *articles_file) {
@@ -198,7 +196,7 @@ int print_article(struct Article *article) {
 int get_file_size(FILE *file) {
   fseek(file, 0, SEEK_END);
   int size = ftell(file);
-  fseek(file, 0, SEEK_SET);
+  rewind(file);
 
   return size;
 }
