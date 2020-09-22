@@ -10,6 +10,7 @@
 
 */
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -38,6 +39,8 @@ int print_article(struct Article *);
 int create_index(FILE *);
 int read_index(FILE *);
 int sort_index();
+int find_article_binary(FILE *, FILE *);
+int binary_search(struct Index *, short int, FILE *);
 
 int main(int argc, char const *argv[]) {
 
@@ -47,16 +50,68 @@ int main(int argc, char const *argv[]) {
     printf("\n\n");
   }
 
+  FILE *index = fopen(INDEX_NAME, "rb");
+  if (!index) {
+    printf("Error intentando leer el index...\n\n");
+    printf("\n\n");
+  }
+
   /* show_all(file); */
   /* show_max_stock(file, 8); */
   /* bigger_provider(file); */
   /* find_article(file); */
-  create_index(file);
-  sort_index();
-  read_index(fopen(INDEX_NAME, "rb"));
+  find_article_binary(file, index);
+  /* create_index(file); */
+  /* sort_index(); */
+  /* read_index(fopen(INDEX_NAME, "rb")); */
 
   printf("\n\n");
   return 0;
+}
+
+int find_article_binary(FILE *database, FILE *index_file) {
+  short int wanted_article;
+  struct Article article;
+  struct Index index;
+
+  printf("Que artículo desea buscar? ");
+  scanf("%hd", &wanted_article);
+
+  /*   preguntar al profe por esto */
+  int found_index = binary_search(&index, wanted_article, index_file);
+
+  if (found_index != -1) {
+    fseek(database, found_index * sizeof(article), SEEK_SET);
+    fread(&article, sizeof(article), 1, database);
+    print_article(&article);
+    
+  } else {
+    printf("Artículo no encontrado.\n\n");
+  }
+}
+
+int binary_search(struct Index *possible_index, short int wanted_article, FILE *file) {
+  int left = 0;
+  int right = (get_file_size(file) / sizeof(*(possible_index))) - 1;
+
+  while (left <= right) {
+    /* NO ENTIENDO ESTA FORMULA */
+    int middle = left + ((right - left) / 2);
+
+    fseek(file, middle * sizeof(possible_index), SEEK_SET);
+    fread(possible_index, sizeof(*possible_index), 1, file);
+
+    if (wanted_article == possible_index->article_number) {
+      return possible_index->id;
+
+    } else if (wanted_article < possible_index->article_number) {
+      right = middle - 1;
+
+    } else if (wanted_article > possible_index->article_number) {
+      left = middle + 1;
+    }
+  }
+  return -1;
 }
 
 int sort_index() {
@@ -87,8 +142,8 @@ int sort_index() {
       }
       fseek(file_r, -sizeof(first), SEEK_CUR);
     }
-    /* Si no uso rewind, al ejecutar for i por segunda vez, lee desde ~ el final del archivo, con flags de EOF.
-    Todo un lío */
+    /* Si no uso rewind, al ejecutar for i por segunda vez, lee desde ~ el final del archivo, con flags de
+    EOF. Todo un lío */
     rewind(file_r);
   }
 }
@@ -119,7 +174,7 @@ int create_index(FILE *articles_file) {
   fseek(articles_file, 0, SEEK_SET);
   fclose(index_file);
 
-  printf("Index creado :)");
+  printf("Index creado :)\n");
 }
 
 int read_index(FILE *index_file) {
