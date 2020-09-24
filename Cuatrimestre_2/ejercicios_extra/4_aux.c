@@ -31,18 +31,24 @@ int main(int argc, char const *argv[]) {
     exit(EXIT_FAILURE);
   }
 
+  char last_proveedor[MAX_CHARS_2] = "";
   fread(&product_data, sizeof(product_data), 1, products);
   while (!feof(products)) {
-    srand(ftell(products));
-    int random_aumento = rand() % 99;
-    strcpy(aumentos.proveedor, product_data.proveedor);
-    aumentos.porcentaje = random_aumento;
 
-    fwrite(&aumentos, sizeof(aumentos), 1, aumentos_file);
+    /* Hago un checkeo para que los proveedores no se agreguen más de una vez. */
+    if (strcmp(product_data.proveedor, last_proveedor) != 0) {
+      srand(ftell(products));
+      int random_aumento = rand() % 99;
+      strcpy(aumentos.proveedor, product_data.proveedor);
+      aumentos.porcentaje = random_aumento;
+
+      fwrite(&aumentos, sizeof(aumentos), 1, aumentos_file);
+      strcpy(last_proveedor, aumentos.proveedor);
+    }
     fread(&product_data, sizeof(product_data), 1, products);
   }
   fclose(products);
   fclose(aumentos_file);
-  readF();
+  
   return 0;
 }
