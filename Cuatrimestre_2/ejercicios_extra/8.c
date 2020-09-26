@@ -23,6 +23,7 @@ struct Index {
 };
 
 int create_alfa_index(struct Product_data *, int);
+int create_lessThen_index(int, struct Product_data *, int);
 int _read_index();
 bool _not_ordered(char *, char *);
 int _load_in_memory(struct Product_data *, FILE *);
@@ -48,6 +49,7 @@ int main(int argc, char const *argv[]) {
 
   _load_in_memory(product_array, file);
   create_alfa_index(product_array, file_size / sizeof(struct Product_data));
+  create_lessThen_index(5, product_array, file_size / sizeof(struct Product_data));
 
   /* Libero todo lo que ya no necesito */
   free(product_array);
@@ -55,6 +57,26 @@ int main(int argc, char const *argv[]) {
 
   printf("\n\n");
   return 0;
+}
+
+int create_lessThen_index(int minimum_stock, struct Product_data *product_array, int product_size) {
+  int i;
+  struct Index index;
+  FILE *file_index = fopen("index_less_than_5.dat", "wb");
+
+  if (!file_index) {
+    printf("Error al crear el archivo...\n\n");
+    exit(EXIT_FAILURE);
+  }
+
+  for (i = 0; i < product_size; i++) {
+    if ((product_array + i)->stock < minimum_stock) {
+      index.id = i;
+      index.article_number = (product_array + i)->article_number;
+      fwrite(&index, sizeof(index), 1, file_index);
+    }
+  }
+  fclose(file_index);
 }
 
 int create_alfa_index(struct Product_data *product_array, int products_size) {
@@ -90,13 +112,12 @@ int create_alfa_index(struct Product_data *product_array, int products_size) {
     fwrite(&index, sizeof(index), 1, file_index);
   }
   fclose(file_index);
-  _read_index();
 }
 
-int _read_index() {
+int _read_index(char *file_index) {
   struct Index index;
 
-  FILE *file = fopen("index_alfa.dat", "rb");
+  FILE *file = fopen(file_index, "rb");
   if (!file) {
     printf("Error al crear el índice...\n\n");
     exit(EXIT_FAILURE);
