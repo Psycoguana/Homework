@@ -38,6 +38,7 @@ int main(int argc, char const *argv[]) {
 
 int generate_random_data() {
   int i, j;
+  int count = 1;
 
   FILE *file = fopen("lista.dat", "w+b");
   if (!file) {
@@ -56,7 +57,7 @@ int generate_random_data() {
 
   for (i = 0; i < proveedores_size; i++) {
     for (j = 0; j < products_size; j++) {
-      current_data.article_number = j + 1;
+      current_data.article_number = count++;
       strcpy(current_data.description, *(descriptions + j));
       strcpy(current_data.proveedor, *(proveedores + i));
       current_data.stock = rand() % 100;
