@@ -46,7 +46,7 @@ int main(int argc, char const *argv[]) {
     exit(EXIT_FAILURE);
   }
 
-    _load_in_memory(product_array, file);
+  _load_in_memory(product_array, file);
   create_alfa_index(product_array, file_size / sizeof(struct Product_data));
 
   /* Libero todo lo que ya no necesito */
@@ -72,12 +72,12 @@ int create_alfa_index(struct Product_data *product_array, int products_size) {
     for (j = 0; j < products_size - i - 1; j++) {
       struct Product_data *first = (product_array + j);
       struct Product_data *second = (product_array + j + 1);
-      struct Product_data *aux;
+      struct Product_data aux;
 
       if (_not_ordered(first->description, second->description)) {
-        aux = first;
-        first = second;
-        second = aux;
+        aux = *first;
+        *first = *second;
+        *second = aux;
       }
     }
   }
