@@ -21,6 +21,8 @@ struct Product_data {
   int stock;
 };
 
+int print_article(struct Product_data *productos);
+
 int main(int argc, char const *argv[]) {
   FILE *file = fopen("lista.dat", "r+b");
 
