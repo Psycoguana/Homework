@@ -32,7 +32,7 @@ int modify_record();
 int sort_record();
 
 int get_data(struct Alumno *);
-bool notOrdered(char *, char *);
+bool _not_ordered(char *, char *);
 void cut_newline(char *);
 void clean_stdin(void);
 
@@ -255,7 +255,7 @@ int sort_record() {
   for (i = 0; i < record_size - 1; i++) {
     for (j = 0; j < record_size - i - 1; j++) {
 
-      if (notOrdered((record_array + j)->name, (record_array + j + 1)->name)) {
+      if (_not_ordered((record_array + j)->name, (record_array + j + 1)->name)) {
         struct Alumno aux;
         aux = *(record_array + j);
         *(record_array + j) = *(record_array + j + 1);
@@ -271,18 +271,7 @@ int sort_record() {
   fclose(file);
 }
 
-bool notOrdered(char *s1, char *s2) {
-  int i;
-  int size = (strlen(s1) > strlen(s2) ? strlen(s2) : strlen(s1));
-
-  for (i = 0; i < size; i++) {
-      if (*(s1+i) > *(s2+i)) {
-          return true;
-      } else {
-          return false;
-      }
-  }
-}
+bool _not_ordered(char *string_1, char *string_2) { return (strcmp(string_1, string_2) > 0); }
 
 void cut_newline(char *ch) {
   /* This function removes the trailing \n from strings */
