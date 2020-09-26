@@ -16,6 +16,7 @@
 #include <string.h>
 
 #define INDEX_NAME "index.dat"
+#define MAX_PROVEEDOR 50
 
 struct Article {
   short int article_number;
@@ -41,6 +42,7 @@ int read_index(FILE *);
 int sort_index();
 int find_article_binary(FILE *, FILE *);
 int binary_search(struct Index *, short int, FILE *);
+int biggest_provider(FILE *);
 
 int main(int argc, char const *argv[]) {
 
@@ -60,13 +62,57 @@ int main(int argc, char const *argv[]) {
   /* show_max_stock(file, 8); */
   /* bigger_provider(file); */
   /* find_article(file); */
-  find_article_binary(file, index);
+  /* find_article_binary(file, index); */
+  biggest_provider(file);
   /* create_index(file); */
   /* sort_index(); */
   /* read_index(fopen(INDEX_NAME, "rb")); */
 
   printf("\n\n");
   return 0;
+}
+
+int biggest_provider(FILE *file) {
+  int i;
+  int prov_index;
+  struct Article article;
+  int size = 1;
+  char **providers = malloc(size * sizeof(char *));
+  int *count = (int *)malloc(sizeof(int) * size);
+
+  fread(&article, sizeof(article), 1, file);
+  providers[0] = malloc(MAX_PROVEEDOR);
+  strcpy(providers[0], article.fabricante);
+
+  while (!feof(file)) {
+    prov_index = _in_array(article.fabricante, providers, size);
+    if (prov_index != -1) {
+      count[prov_index] += 1;
+    } else {
+      size++;
+      count = realloc(count, size * sizeof(int));
+      providers = realloc(providers, size * sizeof(char *));
+      providers[size-1] = malloc(MAX_PROVEEDOR);
+      
+      strcpy(providers[size - 1], article.fabricante);
+      printf("%s\n", providers[size - 1]);
+      count[size - 1] = 1;
+    }
+    fread(&article, sizeof(article), 1, file);
+  }
+}
+
+int _in_array(char *string, char array[][MAX_PROVEEDOR], int size) {
+  int i;
+  for (i = 0; i < size; i++) {
+    printf("size %d  i:%d\n", size, i);
+    if (strcmp(string, array[i]) == 0) {
+      printf("%s %s", string, array[i]);
+      fflush(stdout);
+      return i;
+    }
+  }
+  return -1;
 }
 
 int find_article_binary(FILE *database, FILE *index_file) {
@@ -84,7 +130,7 @@ int find_article_binary(FILE *database, FILE *index_file) {
     fseek(database, found_index * sizeof(article), SEEK_SET);
     fread(&article, sizeof(article), 1, database);
     print_article(&article);
-    
+
   } else {
     printf("Artículo no encontrado.\n\n");
   }
