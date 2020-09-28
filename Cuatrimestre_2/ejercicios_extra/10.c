@@ -57,5 +57,7 @@ int read_mp3_info(struct datosMP3 *mp3) {
   printf("Álbum: %s\n", mp3->album);
   printf("Año: %c%c%c%c\n", mp3->anio[0], mp3->anio[1], mp3->anio[2], mp3->anio[3]);
   printf("Comentario: %s\n", mp3->comentario);
-  printf("Género: %c\n", mp3->genero);
+  /*   Printeo el género como un decimal porque me parece más fácil reconocer el género así
+    https://en.wikipedia.org/wiki/List_of_ID3v1_Genres#ID3v1_defined_genres */
+  printf("Género: %d\n", mp3->genero);
 }
