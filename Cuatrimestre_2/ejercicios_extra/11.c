@@ -32,27 +32,27 @@ struct Provincia {
 };
 
 long _get_file_size(FILE *);
-struct Venta *_load_ventas();
-struct Provincia *_load_provincias();
-void _sort_array(struct Venta *, int);
+void _sort_ventas(struct Venta *, int);
+void *_load_in_memory(FILE *, int);
 
 int main(int argc, char const *argv[]) {
   int i, j;
-  struct Venta *ventas_array = _load_ventas();
-  struct Provincia *provincias_array = _load_provincias();
 
   FILE *file = fopen("ventas.dat", "rb");
   FILE *file_provincias = fopen("provincias.dat", "rb");
-
   if (!file || !file_provincias) {
     printf("Error abriendo el archivo\n\n");
     exit(EXIT_FAILURE);
   }
 
+  struct Venta *ventas_array = (struct Venta *)_load_in_memory(file, sizeof(struct Venta));
+  struct Provincia *provincias_array =
+      (struct Provincia *)_load_in_memory(file_provincias, sizeof(struct Provincia));
+
   long ventas_amount = _get_file_size(file) / sizeof(*ventas_array);
   long provincias_size = _get_file_size(file_provincias) / sizeof(*provincias_array);
 
-  _sort_array(ventas_array, ventas_amount);
+  _sort_ventas(ventas_array, ventas_amount);
 
   for (i = 0; i < provincias_size; i++) {
     int sum = 0;
@@ -73,46 +73,22 @@ int main(int argc, char const *argv[]) {
   return 0;
 }
 
-struct Provincia *_load_provincias() {
+void *_load_in_memory(FILE *file, int struct_size) {
   int i;
-  FILE *file = fopen("provincias.dat", "rb");
-  if (!file) {
-    printf("Error al abrir el archivo...\n\n");
-    exit(EXIT_FAILURE);
-  }
 
   long file_size = _get_file_size(file);
-  struct Provincia *array = malloc(file_size);
-  int elements_size = file_size / sizeof(*array);
+  int elements_amount = file_size / struct_size;
 
-  for (i = 0; i < elements_size; i++) {
-    fread((array + i), sizeof(*array), 1, file);
+  void *array = malloc(file_size);
+
+  for (i = 0; i < elements_amount; i++) {
+    fread(array + (struct_size * i), struct_size, 1, file);
   }
-  fclose(file);
+
   return array;
 }
 
-struct Venta *_load_ventas() {
-  int i;
-
-  FILE *file = fopen("ventas.dat", "rb");
-  if (!file) {
-    printf("Error al abrir el archivo...\n\n");
-    exit(EXIT_FAILURE);
-  }
-
-  long file_size = _get_file_size(file);
-  struct Venta *ventas_array = malloc(file_size);
-  int elements = file_size / sizeof(*ventas_array);
-
-  for (i = 0; i < elements; i++) {
-    fread((ventas_array + i), sizeof(*ventas_array), 1, file);
-  }
-  fclose(file);
-  return ventas_array;
-}
-
-void _sort_array(struct Venta *ventas_array, int size) {
+void _sort_ventas(struct Venta *ventas_array, int size) {
   int i, j;
   struct Venta aux;
 
