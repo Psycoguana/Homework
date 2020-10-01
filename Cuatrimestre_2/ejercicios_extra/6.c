@@ -47,8 +47,6 @@ int main(int argc, char const *argv[]) {
 
         /* Retrocedo dos lecturas, así puedo hacer dos escrituras */
         fseek(file, -2 * sizeof(alumno), SEEK_CUR);
-        fwrite(&alumno, sizeof(alumno), 1, file);
-        fwrite(&alumno_2, sizeof(alumno_2), 1, file);
       }
       /* Retrocedo un lugar sin importar si los nombres estában ordenados o no */
       fseek(file, -sizeof(alumno), SEEK_CUR);
