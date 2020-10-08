@@ -1,0 +1,180 @@
+Artículo: 1
+	Cantidad a comprar: 85
+
+Artículo: 2
+	Cantidad a comprar: 160
+
+Artículo: 3
+	Cantidad a comprar: 188
+
+Artículo: 4
+	Cantidad a comprar: 456
+
+Artículo: 5
+	Cantidad a comprar: 171
+
+Artículo: 6
+	Cantidad a comprar: 191
+
+Artículo: 7
+	Cantidad a comprar: 141
+
+Artículo: 9
+	Cantidad a comprar: 229
+
+Artículo: 10
+	Cantidad a comprar: 13
+
+Artículo: 11
+	Cantidad a comprar: 150
+
+Artículo: 12
+	Cantidad a comprar: 382
+
+Artículo: 13
+	Cantidad a comprar: 119
+
+Artículo: 14
+	Cantidad a comprar: 234
+
+Artículo: 15
+	Cantidad a comprar: 26
+
+Artículo: 16
+	Cantidad a comprar: 411
+
+Artículo: 17
+	Cantidad a comprar: 74
+
+Artículo: 18
+	Cantidad a comprar: 90
+
+Artículo: 19
+	Cantidad a comprar: 15
+
+Artículo: 20
+	Cantidad a comprar: 328
+
+Artículo: 21
+	Cantidad a comprar: 418
+
+Artículo: 22
+	Cantidad a comprar: 422
+
+Artículo: 23
+	Cantidad a comprar: 175
+
+Artículo: 24
+	Cantidad a comprar: 138
+
+Artículo: 25
+	Cantidad a comprar: 198
+
+Artículo: 26
+	Cantidad a comprar: 295
+
+Artículo: 28
+	Cantidad a comprar: 133
+
+Artículo: 29
+	Cantidad a comprar: 242
+
+Artículo: 30
+	Cantidad a comprar: 57
+
+Artículo: 31
+	Cantidad a comprar: 132
+
+Artículo: 32
+	Cantidad a comprar: 63
+
+Artículo: 33
+	Cantidad a comprar: 329
+
+Artículo: 35
+	Cantidad a comprar: 207
+
+Artículo: 36
+	Cantidad a comprar: 314
+
+Artículo: 37
+	Cantidad a comprar: 8
+
+Artículo: 38
+	Cantidad a comprar: 239
+
+Artículo: 39
+	Cantidad a comprar: 39
+
+Artículo: 40
+	Cantidad a comprar: 29
+
+Artículo: 41
+	Cantidad a comprar: 82
+
+Artículo: 42
+	Cantidad a comprar: 153
+
+Artículo: 43
+	Cantidad a comprar: 456
+
+Artículo: 44
+	Cantidad a comprar: 248
+
+Artículo: 45
+	Cantidad a comprar: 170
+
+Artículo: 46
+	Cantidad a comprar: 6
+
+Artículo: 47
+	Cantidad a comprar: 392
+
+Artículo: 48
+	Cantidad a comprar: 325
+
+Artículo: 49
+	Cantidad a comprar: 11
+
+Artículo: 51
+	Cantidad a comprar: 39
+
+Artículo: 52
+	Cantidad a comprar: 217
+
+Artículo: 53
+	Cantidad a comprar: 236
+
+Artículo: 54
+	Cantidad a comprar: 244
+
+Artículo: 55
+	Cantidad a comprar: 48
+
+Artículo: 56
+	Cantidad a comprar: 303
+
+Artículo: 57
+	Cantidad a comprar: 32
+
+Artículo: 58
+	Cantidad a comprar: 364
+
+Artículo: 59
+	Cantidad a comprar: 309
+
+Artículo: 60
+	Cantidad a comprar: 374
+
+Artículo: 61
+	Cantidad a comprar: 170
+
+Artículo: 62
+	Cantidad a comprar: 39
+
+Artículo: 63
+	Cantidad a comprar: 384
+
+Artículo: 64
+	Cantidad a comprar: 267
+

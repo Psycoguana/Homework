@@ -1,0 +1,51 @@
+Ventas registradas para la provincia con código 5
+
+
+Proveedor: PEREZ
+	Monto: $176.00
+
+Proveedor: PRAZZI
+	Monto: $179.20
+
+Proveedor: PRAZZI
+	Monto: $246.40
+
+Proveedor: KERBAN
+	Monto: $249.60
+
+Proveedor: MARCO
+	Monto: $672.00
+
+Proveedor: KERBAN
+	Monto: $694.40
+
+Proveedor: POLO
+	Monto: $713.60
+
+Proveedor: MARCO
+	Monto: $780.80
+
+Proveedor: POLO
+	Monto: $803.20
+
+Proveedor: NELA
+	Monto: $995.20
+
+Proveedor: PEREZ
+	Monto: $998.40
+
+Proveedor: MARCO
+	Monto: $1107.20
+
+Proveedor: PEREZ
+	Monto: $1232.00
+
+Proveedor: NELA
+	Monto: $1302.40
+
+Proveedor: ALEN
+	Monto: $1411.20
+
+Proveedor: KERBAN
+	Monto: $1548.80
+
