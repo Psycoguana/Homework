@@ -2,7 +2,7 @@
 
 1.  HACER UN PROGRAMA DE LECTURA ✔️
 2.  MOSTRAR LOS ARTICULOS CUYO STOCK ES MENOR QUE 8 ✔️
-3.  DETERMINAR QUIEN ES EL PROVEEDOR QUE MAS ARTICULOS SUMINISTRA
+3.  DETERMINAR QUIEN ES EL PROVEEDOR QUE MAS ARTICULOS SUMINISTRA ✔️
 4.  PERMITIR EL INGRESO DE UN #ART Y BUSCARLO ✔️
 5.  INDEXAR EL ARCHIVO ✔️
 6.  ORDENAR EL INDICE ✔️
@@ -46,7 +46,7 @@ int biggest_provider(FILE *);
 
 int main(int argc, char const *argv[]) {
 
-  FILE *file = fopen("/home/psyco/Programming/C/Cuatrimestre_2/indexados/BDARTICULOS", "rb");
+  FILE *file = fopen("/home/psyco/Programming/C/Cuatrimestre_2/indexados/BDARTICULOS", "r+b");
   if (!file) {
     printf("Error intentando leer el archivo...\n\n");
     printf("\n\n");
@@ -73,33 +73,37 @@ int main(int argc, char const *argv[]) {
 }
 
 int biggest_provider(FILE *file) {
-  int i;
-  int prov_index;
+  int i, j;
+  int max_sum, current_sum = 0, file_elements;
+  char current_provider[MAX_PROVEEDOR] = "", max_provider[MAX_PROVEEDOR];
   struct Article article;
-  int size = 1;
-  char **providers = malloc(size * sizeof(char *));
-  int *count = (int *)malloc(sizeof(int) * size);
+  file_elements = get_file_size(file) / sizeof(article);
 
-  fread(&article, sizeof(article), 1, file);
-  providers[0] = malloc(MAX_PROVEEDOR);
-  strcpy(providers[0], article.fabricante);
+  /* Ordeno alfabéticamente */
+  _sort_alfabeticamente(file);
 
-  while (!feof(file)) {
-    prov_index = _in_array(article.fabricante, providers, size);
-    if (prov_index != -1) {
-      count[prov_index] += 1;
-    } else {
-      size++;
-      count = realloc(count, size * sizeof(int));
-      providers = realloc(providers, size * sizeof(char *));
-      providers[size-1] = malloc(MAX_PROVEEDOR);
-      
-      strcpy(providers[size - 1], article.fabricante);
-      printf("%s\n", providers[size - 1]);
-      count[size - 1] = 1;
-    }
+  do {
     fread(&article, sizeof(article), 1, file);
-  }
+
+    /* Si estoy leyendo un nuevo proveedor... */
+    if (strcmp(article.fabricante, current_provider) != 0) {
+      if (current_sum > max_sum) {
+        /* Si el proveedor anterior era el mayor proveedor hasta ahora, lo actualizo */
+        max_sum = current_sum;
+        strcpy(max_provider, current_provider);
+      }
+      /* Actualizo los datos para el seguimiento del proveedor actual */
+      strcpy(current_provider, article.fabricante);
+      current_sum = 1;
+
+    } else {
+      /* Si sigo con el mismo proveedor de antes, solo aumento su contador */
+      current_sum++;
+    }
+
+  } while (!feof(file));
+
+  printf("El mayor proveedor es %s con %d artículos :)", max_provider, max_sum);
 }
 
 int _in_array(char *string, char array[][MAX_PROVEEDOR], int size) {
@@ -261,8 +265,6 @@ int find_article(FILE *file) {
   }
 }
 
-int bigger_provider(FILE *file) {}
-
 int show_max_stock(FILE *file, int max_stock) {
   struct Article article;
 
@@ -292,6 +294,26 @@ int print_article(struct Article *article) {
   printf("Descripción: %s\n", article->description);
   printf("Fabricante: %s\n", article->fabricante);
   printf("Stock: %d\n\n", article->stock);
+}
+
+int _sort_alfabeticamente(FILE *file) {
+  int i, j;
+  struct Article article, first, second;
+  int file_elements = get_file_size(file) / sizeof(article);
+
+  for (i = 0; i < file_elements - 1; i++) {
+    for (j = 0; j < file_elements - i - 1; j++) {
+      fseek(file, sizeof(article) * j, SEEK_SET);
+      fread(&first, sizeof(first), 1, file);
+      fread(&second, sizeof(first), 1, file);
+
+      if (strcmp(first.fabricante, second.fabricante) > 0) {
+        fseek(file, sizeof(article) * j, SEEK_SET);
+        fwrite(&second, sizeof(second), 1, file);
+        fwrite(&first, sizeof(first), 1, file);
+      }
+    }
+  }
 }
 
 int get_file_size(FILE *file) {
