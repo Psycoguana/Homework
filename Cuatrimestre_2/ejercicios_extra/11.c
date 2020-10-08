@@ -45,17 +45,24 @@ int main(int argc, char const *argv[]) {
     exit(EXIT_FAILURE);
   }
 
+  /* Alojo ambos arrays de estructuras en memoria */
   struct Venta *ventas_array = (struct Venta *)_load_in_memory(file, sizeof(struct Venta));
   struct Provincia *provincias_array =
       (struct Provincia *)_load_in_memory(file_provincias, sizeof(struct Provincia));
+
+  /* Como los archivos están cargados en memoria, ya no los necesito */
+  fclose(file);
+  fclose(file_provincias);
 
   long ventas_amount = _get_file_size(file) / sizeof(*ventas_array);
   long provincias_size = _get_file_size(file_provincias) / sizeof(*provincias_array);
 
   _sort_ventas(ventas_array, ventas_amount);
 
+  /* Recorre cada provincia */
   for (i = 0; i < provincias_size; i++) {
     int sum = 0;
+    /* Recorre cada venta */
     for (j = 0; j < ventas_amount; j++) {
       if ((ventas_array + j)->codigoprovincia == (provincias_array + i)->codigoprovincia)
         sum++;
@@ -66,24 +73,21 @@ int main(int argc, char const *argv[]) {
   free(provincias_array);
   free(ventas_array);
 
-  fclose(file);
-  fclose(file_provincias);
-
   printf("\n\n");
   return 0;
 }
 
 void *_load_in_memory(FILE *file, int struct_size) {
-  int i;
-
   long file_size = _get_file_size(file);
   int elements_amount = file_size / struct_size;
 
   void *array = malloc(file_size);
-
-  for (i = 0; i < elements_amount; i++) {
-    fread(array + (struct_size * i), struct_size, 1, file);
+  if (!array) {
+    printf("Error al asignar memoria...\n\n");
+    exit(EXIT_FAILURE);
   }
+
+  fread(array, struct_size, elements_amount, file);
 
   return array;
 }
