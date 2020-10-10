@@ -62,6 +62,7 @@ int main(int argc, char const *argv[]) {
   terminas comprobando los proveedores muuuchas mas veces de las necesarias */
   printf("La mayor proveedora es %s con %d artículos\n", max_prov, max_sum);
 
+  fclose(file);
   printf("\n\n");
   return 0;
 }

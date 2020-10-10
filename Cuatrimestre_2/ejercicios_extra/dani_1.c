@@ -80,6 +80,8 @@ int main(int argc, char const *argv[]) {
   fprintf(resultados, "\n\nGANADOR: %s con %d votos.", max_candidato, max_votos);
   fprintf(resultados, "\nEl distrito con mayor votos fue %s con %d votos.", max_distrito_char, max_distrito);
 
+  fclose(votos);
+  fclose(resultados);
   printf("\n\n");
   return 0;
 }
